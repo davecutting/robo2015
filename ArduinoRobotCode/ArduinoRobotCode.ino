@@ -186,17 +186,17 @@ void loop() {
       
       // Set Drive Motor Directions
       if(Xr > 0){
-        DirB = 1;
-      }
-      else{
-        DirB = 0;
-      }
-      
-      if(Yr > 0){
         DirC = 1;
       }
       else{
         DirC = 0;
+      }
+      
+      if(Yr > 0){
+        DirB = 1;
+      }
+      else{
+        DirB = 0;
       } 
      
      // Set Motor A Speed and Direction
@@ -217,11 +217,11 @@ void loop() {
      // Set Motor D Speed and Direction
      if(~button & MASK_F1){
        SpdD = Spdlft;
-       DirD = 0;
+       DirD = 1;
      }
      else if(~button & MASK_F2){
        SpdD = Spdlft;
-       DirD = 1;
+       DirD = 0;
      }
      else{
        SpdD = 0;

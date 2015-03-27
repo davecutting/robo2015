@@ -1,7 +1,3 @@
-
-
-
-
 // Robot Controller
 //
 // Before using this sketch you need to import the following libraries:
@@ -16,6 +12,8 @@
 // In SoftPWM.h you should change #define SOFTPWM_MAXCHANNELS 5
 #include <IRremote.h>
 #include <SoftPWM.h>
+#include <Crc16.h>
+
 
 // Masks for Buttons
 #define MASK_D3 0x8
@@ -266,10 +264,6 @@ void loop() {
     
     irrecv.resume(); // Receive the next value
   }
-  
-
-
-
    
 }
 

@@ -41,33 +41,33 @@ public:
 
 // Send types
 #define IRsendNEC
-#define IRsendSONY
-#define IRsendRC5
-#define IRsendRC6
-#define IRsendDISH
-#define IRsendSHARP
-#define IRsendPANASONIC
-#define IRsendJVC
-#define IRsendSANYO
-#define IRsendMITSUBISHI
-#define IRsendSAMSUNG
-#define IRsendRAW
+//#define IRsendSONY
+//#define IRsendRC5
+//#define IRsendRC6
+//#define IRsendDISH
+//#define IRsendSHARP
+//#define IRsendPANASONIC
+//#define IRsendJVC
+//#define IRsendSANYO
+//#define IRsendMITSUBISHI
+//#define IRsendSAMSUNG
+//#define IRsendRAW
 
 // Values for decode_type
 #define NEC 1
-#define SONY 2
-#define RC5 3
-#define RC6 4
-#define DISH 5
-#define SHARP 6
-#define PANASONIC 7
-#define JVC 8
-#define SANYO 9
-#define MITSUBISHI 10
-#define SAMSUNG 11
-#define LG 12
-#define WHYNTER 13
-#define AIWA_RC_T501 14
+//#define SONY 2
+//#define RC5 3
+//#define RC6 4
+//#define DISH 5
+//#define SHARP 6
+//#define PANASONIC 7
+//#define JVC 8
+//#define SANYO 9
+//#define MITSUBISHI 10
+//#define SAMSUNG 11
+//#define LG 12
+//#define WHYNTER 13
+//#define AIWA_RC_T501 14
 #define UNKNOWN -1
 
 // Decoded value for NEC when a repeat code is received

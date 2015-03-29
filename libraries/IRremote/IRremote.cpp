@@ -539,12 +539,15 @@ int IRrecv::decode(decode_results *results) {
   if (decodeSAMSUNG(results)) {
     return DECODED;
   }
+  #endif
+  #ifdef WHYNTER
 #ifdef DEBUG
   Serial.println("Attempting Whynter decode");
 #endif
   if (decodeWhynter(results)) {
     return DECODED;
   }
+  #endif
 // Aiwa RC-T501
 #ifdef AIWA_RC_T501
 #ifdef DEBUG
@@ -675,6 +678,7 @@ long IRrecv::decodeSony(decode_results *results) {
 }
 #endif
 
+#ifdef WHYNTER
 long IRrecv::decodeWhynter(decode_results *results) {
   long data = 0;
   
@@ -732,7 +736,7 @@ long IRrecv::decodeWhynter(decode_results *results) {
   results->decode_type = WHYNTER;
   return DECODED;
 }
-
+#endif
 
 #ifdef SANYO
 // I think this is a Sanyo decoder - serial = SA 8650B
@@ -866,6 +870,7 @@ long IRrecv::decodeMitsubishi(decode_results *results) {
 }
 #endif
 
+#ifdef RC5 || ifdef RC6
 // Gets one undecoded level at a time from the raw buffer.
 // The RC5/6 decoding is easier if the data is broken into time intervals.
 // E.g. if the buffer has MARK for 2 time intervals and SPACE for 1,
@@ -913,6 +918,7 @@ int IRrecv::getRClevel(decode_results *results, int *offset, int *used, int t1) 
 }
 #endif
 
+#ifdef RC5
 long IRrecv::decodeRC5(decode_results *results) {
   if (irparams.rawlen < MIN_RC5_SAMPLES + 2) {
     return ERR;
@@ -947,7 +953,9 @@ long IRrecv::decodeRC5(decode_results *results) {
   results->decode_type = RC5;
   return DECODED;
 }
+#endif
 
+#ifdef RC6
 long IRrecv::decodeRC6(decode_results *results) {
   if (results->rawlen < MIN_RC6_SAMPLES) {
     return ERR;
@@ -998,6 +1006,7 @@ long IRrecv::decodeRC6(decode_results *results) {
   results->decode_type = RC6;
   return DECODED;
 }
+#endif
 
 #ifdef PANASONIC
 long IRrecv::decodePanasonic(decode_results *results) {
@@ -1279,6 +1288,8 @@ int IRrecv::compare(unsigned int oldval, unsigned int newval) {
   }
 }
 
+
+
 // Use FNV hash algorithm: http://isthe.com/chongo/tech/comp/fnv/#FNV-param
 #define FNV_PRIME_32 16777619
 #define FNV_BASIS_32 2166136261
@@ -1303,6 +1314,7 @@ long IRrecv::decodeHash(decode_results *results) {
   results->decode_type = UNKNOWN;
   return DECODED;
 }
+
 
 /* Sharp and DISH support by Todd Treece ( http://unionbridge.org/design/ircommand )
 

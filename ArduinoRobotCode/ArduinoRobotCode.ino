@@ -110,16 +110,13 @@ void setup()
   
   // Set motors to stop
   SoftPWMBegin();
-  SoftPWMSetFadeTime(pwm_a, 0, 0);
-  SoftPWMSetFadeTime(pwm_b, 0, 0);
-  SoftPWMSetFadeTime(pwm_c, 0, 0);
-  SoftPWMSetFadeTime(pwm_d, 0, 0);
-  SoftPWMSetFadeTime(pwm_e, 0, 0);
   SoftPWMSet(pwm_a, 0);
   SoftPWMSet(pwm_b, 0);
   SoftPWMSet(pwm_c, 0);
   SoftPWMSet(pwm_d, 0);
   SoftPWMSet(pwm_e, 0);
+  SoftPWMSetFadeTime(ALL, 1000, 0);
+
   
   Serial.println("Setup Complete");
 }
@@ -149,8 +146,8 @@ void loop() {
   }
 */    
   // Recieve IR Signal
-//  if ((irrecv.decode(&results)) && (results.decode_type==NEC)) {
-  if ((irrecv.decode(&results))) {
+  //if ((irrecv.decode(&results)) && (results.decode_type==NEC)) {
+    if ((irrecv.decode(&results))) {
     // Print IR Signal in Hexadecimal onto Serial Line
     
     //Serial.println(results.value, HEX); 
@@ -271,7 +268,7 @@ void loop() {
     irrecv.resume(); // Receive the next value
   }
     // If a good CRC hasn't been seen for more than half a second then turn off all motors
-if ((end_a + 500) < millis()){
+if ((end_a + 250) < millis()){
       SpdA = 0;
       SpdB = 0;
       SpdC = 0;

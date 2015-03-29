@@ -10,9 +10,11 @@
 // 
 // In IRremoteInt.h you have to uncomment line 70 to #define IR_USE_TIMER1 and comment line 71 to // #define IR_USE_TIMER2 - that means IR diode must be on pin 9!!! 
 // In SoftPWM.h you should change #define SOFTPWM_MAXCHANNELS 5
+//
+// Also comment out all symbols in lines 44-54 and 58-70 of IRremote.h...then you have to add #ifdef and #endif statements that are missing until it compiles
+
 #include <IRremote.h>
 #include <SoftPWM.h>
-#include <Crc16.h>
 
 
 // Masks for Buttons
@@ -56,14 +58,16 @@ byte DirD = 0;
 byte DirE = 0;
 
 //Motor Shutdown Variables
-byte end_a = 0;
-byte end_d = 0;
-byte end_e = 0;
+unsigned long end_a = 0;
 
 // Motor Max Speeds
 byte Spd = 50;
 byte Spdstr = 50;
 byte Spdlft = 50;
+
+// Raspberry pi stuff
+int x_pi = 0;
+int y_pi = 0;
 
 // CRC8 Code
 // Github, user jlewallen
@@ -92,8 +96,8 @@ uint8_t crc8_block(uint8_t crc, uint8_t *data, uint8_t sz) {
 
 void setup()
 {
-  // Begin Serial Communication at a Frequency of 9600 Baud
-  Serial.begin(9600);
+  // Begin Serial Communication at a Frequency of 57600 Baud
+  Serial.begin(57600);
   
   irrecv.enableIRIn(); // Start IR Reciever
   
@@ -122,21 +126,35 @@ void setup()
 
 void loop() {
   
-  //Serial.println("loop");
-  //delay(50);
   // Create variables for joystick, buttons, and CRC8 logic and initialize to 0
   int X = 0;
   int Y = 0;
   int Xr = 0;
   int Yr = 0;
-  int button = 0xFFFF;
+  int button = 0xFFFF;    // all buttons off
   int crc = 0;
   
+  // Recieve serial from rasp pi
+/*  if (Serial.available()) {
+    if (Serial.find("(")) {
+      x_pi = Serial.parseInt();
+      y_pi = Serial.parseInt();
+      
+      Serial.print(x_pi);
+      Serial.print(", ");
+      Serial.println(y_pi);
+
+      // Now do something with this data!
+    }
+  }
+*/    
   // Recieve IR Signal
-  if (irrecv.decode(&results)) {
+//  if ((irrecv.decode(&results)) && (results.decode_type==NEC)) {
+  if ((irrecv.decode(&results))) {
     // Print IR Signal in Hexadecimal onto Serial Line
-    Serial.println(results.value, HEX); 
     
+    //Serial.println(results.value, HEX); 
+    Serial.print("A");
     // Check Code for Proper CRC8 value
     crc = crc8_block(crc, (uint8_t*)&results.value, 3);
     //Serial.print("crc: ");
@@ -214,10 +232,12 @@ void loop() {
      
      // Set Motor D Speed and Direction
      if(~button & MASK_F1){
+       Serial.println("F1 pressed");
        SpdD = Spdlft;
        DirD = 1;
      }
      else if(~button & MASK_F2){
+       Serial.println("F2 pressed");
        SpdD = Spdlft;
        DirD = 0;
      }
@@ -226,36 +246,22 @@ void loop() {
      }
      // Set Motor E Speed and Direction
      if(~button & MASK_D6){
+       Serial.println("D6 pressed");
        SpdE = Spdlft;
        DirE = 0;
      }
      else if(~button & MASK_D3){
+       Serial.println("D3 pressed");
        SpdE = Spdlft;
        DirE = 1;
      }
      else{
        SpdE = 0;
      }
+     // store the time when the last good transmission came in
     end_a = millis();
     }
-
-    //Write values to hardware here
-   
     
-    if (end_a + 100 > millis()){
-      SpdA = 0;
-      SpdB = 0;
-      SpdC = 0;
-      SpdD = 0;
-      SpdE = 0;
-    }
-    
-    SoftPWMSetPercent(pwm_a, SpdA);
-    SoftPWMSetPercent(pwm_b, SpdB);
-    SoftPWMSetPercent(pwm_c, SpdC);
-    SoftPWMSetPercent(pwm_d, SpdD);
-    SoftPWMSetPercent(pwm_e, SpdE);
-  
     digitalWrite(dir_a, DirA);
     digitalWrite(dir_b, DirB); 
     digitalWrite(dir_c, DirC);
@@ -264,6 +270,23 @@ void loop() {
     
     irrecv.resume(); // Receive the next value
   }
+    // If a good CRC hasn't been seen for more than half a second then turn off all motors
+if ((end_a + 500) < millis()){
+      SpdA = 0;
+      SpdB = 0;
+      SpdC = 0;
+      SpdD = 0;
+      SpdE = 0;
+    }
+    
+    //Write values to hardware here
    
+    SoftPWMSetPercent(pwm_a, SpdA);
+    SoftPWMSetPercent(pwm_b, SpdB);
+    SoftPWMSetPercent(pwm_c, SpdC);
+    SoftPWMSetPercent(pwm_d, SpdD);
+    SoftPWMSetPercent(pwm_e, SpdE);
+  
+
 }
 

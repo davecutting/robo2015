@@ -65,9 +65,9 @@ byte DirE = 0;
 unsigned long end_a = 0;
 
 // Motor Maximum Speeds
-byte Spd = 65;
-byte Spdstr = 40;
-byte Spdlft = 60;
+byte Spd = 80;
+byte Spdstr = 55;
+byte Spdlft = 80;
 
 // Raspberry Pi Send/Recieve Variables
 int x_pi = 0;
@@ -120,7 +120,7 @@ void setup()
   SoftPWMSet(pwm_d, 0);
   SoftPWMSet(pwm_e, 0);
   
-  SoftPWMSetFadeTime(ALL, 1000, 0); // Set Fade Time for all motors
+  SoftPWMSetFadeTime(ALL, 2000, 0); // Set Fade Time for all motors
   
   Serial.println("Setup Complete"); // Print "Setup Complete" to serial line
 }
@@ -175,20 +175,29 @@ void loop() {
           while(Y > (-X+64)){
            X-=1;
            Y-=1;
+           Serial.print(".");
           }
           while(Y > (X+64)){
             X+=1;
             Y-=1;
+            Serial.print(".");
           }
           while(Y < (-X-64)) {
             X+=1;
             Y+=1;
+            Serial.print(".");
           }
           while(Y < (X-64)) {
             X-=1;
             Y+=1;
+            Serial.print(".");
           }
+          Serial.println("");
       
+          Serial.print(X);
+          Serial.print(",");
+          Serial.print(Y);
+          
           //Step 3: Scale Graph according to maximum motor speed
           X *= (Spdstr*1.414)/64;
           Y *= (Spd*1.414)/64;
@@ -199,6 +208,12 @@ void loop() {
        
           SpdB = abs(Xr);
           SpdC = abs(Yr);
+
+
+          Serial.print(" :: ");
+          Serial.print(Xr);
+          Serial.print(",");
+          Serial.println(Yr);
           
           // Set Drive Motor Directions
           if(Xr > 0){

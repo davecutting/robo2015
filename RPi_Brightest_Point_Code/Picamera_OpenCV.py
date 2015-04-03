@@ -9,7 +9,7 @@ import picamera.array
 camheight=180
 camwidth=320
 radius = 5
-#ser = serial.Serial('/dev/ttyACM0', 57600)
+ser = serial.Serial('/dev/ttyACM0', 57600)
 camera=picamera.PiCamera()
 camera.resolution = (camwidth,camheight)
 stream = io.BytesIO()
@@ -72,6 +72,8 @@ while True:
     #cv2.destroyAllWindows()
     #print time.clock()
     print distance_from_obj_tup
+    ser.write("("+str(distance_from_obj_tup[0])+", "+str(distance_from_obj_tup[1]))
+    #time.sleep(2)
     #cv2.imshow("Image",image)
     #cv2.waitKey(0)
 print time.clock()

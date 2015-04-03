@@ -149,6 +149,7 @@ void loop() {
     
   // Recieve IR Signal
   //if ((irrecv.decode(&results)) && (results.decode_type==NEC)) {
+    /*
     if ((irrecv.decode(&results))) {
       if ((results.decode_type==NEC)) {
         // Print IR Signal in Hexadecimal onto Serial Line
@@ -175,28 +176,28 @@ void loop() {
           while(Y > (-X+64)){
            X-=1;
            Y-=1;
-           Serial.print(".");
+           //Serial.print(".");
           }
           while(Y > (X+64)){
             X+=1;
             Y-=1;
-            Serial.print(".");
+            //Serial.print(".");
           }
           while(Y < (-X-64)) {
             X+=1;
             Y+=1;
-            Serial.print(".");
+            //Serial.print(".");
           }
           while(Y < (X-64)) {
             X-=1;
             Y+=1;
-            Serial.print(".");
+            //Serial.print(".");
           }
-          Serial.println("");
+          //Serial.println("");
       
-          Serial.print(X);
-          Serial.print(",");
-          Serial.print(Y);
+          //Serial.print(X);
+          //Serial.print(",");
+          //Serial.print(Y);
           
           //Step 3: Scale Graph according to maximum motor speed
           X *= (Spdstr*1.414)/64;
@@ -208,15 +209,26 @@ void loop() {
        
           SpdB = abs(Xr);
           SpdC = abs(Yr);
-
-
-          Serial.print(" :: ");
-          Serial.print(Xr);
-          Serial.print(",");
-          Serial.println(Yr);
+          //Serial.print(SpdB);
+          //Serial.print(",");
+          //Serial.print(SpdC);
+          //Serial.print(",");
+          */
+          
+          
+          //Serial.print(" :: ");
+          //Serial.print(Xr);
+          //Serial.print(",");
+          //Serial.println(Yr);
           
           // Set Drive Motor Directions
+          //DirC is right
+          //DirB is left
+          
+          //x_pi y_pi
+          /*
           if(Xr > 0){
+            Serial.println("Motor1 pressed");
             DirC = 1;
           }
           else{
@@ -224,20 +236,23 @@ void loop() {
           }
       
           if(Yr > 0){
+            Serial.println("Motor2 pressed");
             DirB = 1;
           }
           else{
             DirB = 0;
           } 
-         
+        //Serial.print(DirB);
+        //Serial.print(",");
+        //Serial.println(DirC);
          // Set Motor A Speed and Direction
          if(~button & MASK_D4){
-           //Serial.println("D4 pressed");
+           Serial.println("D4 pressed");
            SpdA = Spdlft;
            DirA = 0;
          }
          else if(~button & MASK_D5){
-           //Serial.println("D5 pressed");
+           Serial.println("D5 pressed");
            SpdA = Spdlft;
            DirA = 1;
          }
@@ -247,12 +262,12 @@ void loop() {
          
          // Set Motor D Speed and Direction
          if(~button & MASK_F1){
-           //Serial.println("F1 pressed");
+           Serial.println("F1 pressed");
            SpdD = Spdlft;
            DirD = 1;
          }
          else if(~button & MASK_F2){
-           //Serial.println("F2 pressed");
+           Serial.println("F2 pressed");
            SpdD = Spdlft;
            DirD = 0;
          }
@@ -261,12 +276,12 @@ void loop() {
          }
          // Set Motor E Speed and Direction
          if(~button & MASK_D6){
-           //Serial.println("D6 pressed");
+           Serial.println("D6 pressed");
            SpdE = Spdlft;
            DirE = 0;
          }
          else if(~button & MASK_D3){
-           //Serial.println("D3 pressed");
+           Serial.println("D3 pressed");
            SpdE = Spdlft;
            DirE = 1;
          }
@@ -274,25 +289,74 @@ void loop() {
            SpdE = 0;
          }
          // store the time when the last good transmission came in
-        end_a = millis();
-        }
+        //end_a = millis();
+        }*/
+      //}
+      
+    
+    //irrecv.resume(); // Receive the next value
+  //}
+  if (abs(x_pi)>10) {
+    if (y_pi>0) {
+            if (x_pi>0) {
+              //Serial.println("2");
+              DirB = 1;
+              DirC = 0;
+              SpdB = (abs(x_pi)*.5);
+              SpdC = (abs(x_pi)*.5);
+            }
+            else {
+              //Serial.println("1");
+              DirB = 0;
+              DirC = 1;
+              SpdB = (abs(x_pi)*.5);
+              SpdC = (abs(x_pi)*.5);
+            }
       }
+      else if (y_pi != 0){
+            if (x_pi<0) {
+              //Serial.println("2");
+              DirB = 1;
+              DirC = 0;
+              SpdB = (abs(x_pi)*.5);
+              SpdC = (abs(x_pi)*.5);
+            }
+            else {
+              //Serial.println("1");
+              DirB = 0;
+              DirC = 1;
+              SpdB = (abs(x_pi)*.5);
+              SpdC = (abs(x_pi)*.5);
+            }
+      }
+    }
+    else {
+      if (y_pi >0) {
+        DirB = 1;
+        DirC = 1;
+        SpdB = (abs(y_pi)*.5);
+        SpdC = (abs(y_pi)*.5);
+      }
+      else {
+        DirB = 0;
+        DirC = 0;
+        SpdB = (abs(y_pi)*.5);
+        SpdC = (abs(y_pi)*.5);
+      }
+    }
     digitalWrite(dir_a, DirA);
     digitalWrite(dir_b, DirB); 
     digitalWrite(dir_c, DirC);
     digitalWrite(dir_d, DirD);
     digitalWrite(dir_e, DirE);
-    
-    irrecv.resume(); // Receive the next value
-  }
     // If a good CRC hasn't been seen for more than half a second then turn off all motors
-if ((end_a + 400) < millis()){
+/*if ((end_a + 400) < millis()){
       SpdA = 0;
       SpdB = 0;
       SpdC = 0;
       SpdD = 0;
       SpdE = 0;
-    }
+    }*/
     
     //Write values to hardware here
    

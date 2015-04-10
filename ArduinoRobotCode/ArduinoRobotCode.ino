@@ -66,8 +66,8 @@ unsigned long end_a = 0;
 
 // Motor Maximum Speeds
 byte Spd = 80;
-byte Spdstr = 55;
-byte Spdlft = 80;
+byte Spdstr = 25;
+byte Spdlft = 100;
 
 // Raspberry Pi Send/Recieve Variables
 int x_pi = 0;
@@ -120,9 +120,9 @@ void setup()
   SoftPWMSet(pwm_d, 0);
   SoftPWMSet(pwm_e, 0);
   
-  SoftPWMSetFadeTime(ALL, 2000, 0); // Set Fade Time for all motors
+  SoftPWMSetFadeTime(ALL, 1000, 0); // Set Fade Time for all motors
   
-  Serial.println("Setup Complete"); // Print "Setup Complete" to serial line
+  //Serial.println("Setup Complete"); // Print "Setup Complete" to serial line
 }
 
 void loop() {
@@ -175,31 +175,31 @@ void loop() {
           while(Y > (-X+64)){
            X-=1;
            Y-=1;
-           Serial.print(".");
+           //Serial.print(".");
           }
           while(Y > (X+64)){
             X+=1;
             Y-=1;
-            Serial.print(".");
+            //Serial.print(".");
           }
           while(Y < (-X-64)) {
             X+=1;
             Y+=1;
-            Serial.print(".");
+            //Serial.print(".");
           }
           while(Y < (X-64)) {
             X-=1;
             Y+=1;
-            Serial.print(".");
+            //Serial.print(".");
           }
-          Serial.println("");
+          //Serial.println("");
       
-          Serial.print(X);
-          Serial.print(",");
-          Serial.print(Y);
+          //Serial.print(X);
+          //Serial.print(",");
+          //Serial.print(Y);
           
           //Step 3: Scale Graph according to maximum motor speed
-          X *= (Spdstr*1.414)/64;
+          X *= (-Spdstr*1.414)/64;
           Y *= (Spd*1.414)/64;
       
           //Step 4: Rotate 45 degrees clockwise to convert to motor speeds.
@@ -210,24 +210,24 @@ void loop() {
           SpdC = abs(Yr);
 
 
-          Serial.print(" :: ");
-          Serial.print(Xr);
-          Serial.print(",");
-          Serial.println(Yr);
+          //Serial.print(" :: ");
+          //Serial.print(Xr);
+          //Serial.print(",");
+          //Serial.println(Yr);
           
           // Set Drive Motor Directions
           if(Xr > 0){
-            DirC = 1;
-          }
-          else{
-            DirC = 0;
-          }
-      
-          if(Yr > 0){
             DirB = 1;
           }
           else{
             DirB = 0;
+          }
+      
+          if(Yr > 0){
+            DirC = 1;
+          }
+          else{
+            DirC = 0;
           } 
          
          // Set Motor A Speed and Direction

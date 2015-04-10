@@ -102,7 +102,7 @@ void setup()
   vert_zero = (analogRead(JV)/8)-64;
   
   // Print "Setup Complete" to the Serial Line 
-  Serial.println("Setup Complete");
+  //Serial.println("Setup Complete");
 }
 
 void loop() {
@@ -141,8 +141,8 @@ void loop() {
   
   //Create CRC Signal
   crc = crc8_block(crc, (uint8_t*)&signal, 3);
-  Serial.print("crc: ");
-  Serial.println(crc,HEX);
+  //Serial.print("crc: ");
+  //Serial.println(crc,HEX);
   
   // Add CRC8 Code to signal for transmission
   signal = signal + ((unsigned long)crc << 24);
@@ -151,7 +151,7 @@ void loop() {
   irsend.sendNEC(signal, 32);
   
   // Print Signal to Serial Port
-  Serial.println(signal, HEX);
+  //Serial.println(signal, HEX);
   
   // Wait 50 Milliseconds Before Compiling and Transmitting Next Code
   delay(50);
